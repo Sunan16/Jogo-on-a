@@ -1,0 +1,17 @@
+{"properties": [
+  {
+    "name": "config.email",
+    "type": "java.lang.String",
+    "description": "A description for 'config.email'"
+  },
+  {
+    "name": "config.password",
+    "type": "java.lang.String",
+    "description": "A description for 'config.password'"
+  },
+  {
+    "name": "config.url-api",
+    "type": "java.lang.String",
+    "description": "A description for 'config.url-api'"
+  }
+]}
