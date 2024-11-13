@@ -1,14 +1,17 @@
 package com.jogonca.api_backend.models.dtos.receiveDTOs;
 
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.jogonca.api_backend.interfaces.AbstractDTOHateoas;
 
-@JsonPropertyOrder({"id","username","email","coins","passwordHash","creatAt","recoveryToken","tokenExpiration", "itens"})
+@JsonPropertyOrder({"id","username","email","birthday","coins","passwordHash","creatAt","recoveryToken","tokenExpiration", "itens"})
 public class UserDTO extends AbstractDTOHateoas<UserDTO> {
     
     @JsonProperty("id")
@@ -16,11 +19,14 @@ public class UserDTO extends AbstractDTOHateoas<UserDTO> {
     private String username;
     private String email;
     private Long coins;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate birthday;
     private String passwordHash;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
     private ZonedDateTime creatAt;
     private String recoveryToken;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
     private ZonedDateTime tokenExpiration;
     private List<ItemDTO> itens;
 
@@ -108,8 +114,20 @@ public class UserDTO extends AbstractDTOHateoas<UserDTO> {
         this.tokenExpiration = tokenExpiration;
     }
 
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+    }
+
     public List<ItemDTO> getItens() {
         return itens;
+    }
+
+    public void setItens(List<ItemDTO> itens) {
+        this.itens = itens;
     }
 
 }

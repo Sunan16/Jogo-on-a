@@ -166,4 +166,33 @@ public class LoginController {
         return dto;
     }
 
+    @Operation(
+        summary = "Login",
+        description = "Operações responsaveis por conferir se email e senha são as mesmas para confirmar o retorno das informações do usuario"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200", description = "Login feito com sucesso!",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation =  PaymentDTO.class))
+        ),
+        @ApiResponse(
+            responseCode = "404", description = "Não encontrado com informações oferecidas",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ExceptionResponse.class))
+        ),
+        @ApiResponse(
+            responseCode = "500", description = "Erro Servidor",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ExceptionResponse.class))
+        )}
+    )
+    @PostMapping(
+        value = "/enter",
+        consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
+    )
+    public UserDTO login(@RequestBody UserSendDTO json) {
+        UserDTO user = loginService.login(json);
+        user.setItens(loginService.getItens(json));
+        return user;
+    }
+
 }

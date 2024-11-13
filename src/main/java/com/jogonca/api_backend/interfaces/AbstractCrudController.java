@@ -23,6 +23,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
+
 public abstract class AbstractCrudController<Dto extends AbstractDTOHateoas<Dto>, E extends IEntity, SendDto extends IDtoSend<TypeIdentifier>, TypeIdentifier> {
 
     protected final AbstractCrudService<Dto, E, SendDto, TypeIdentifier> service;

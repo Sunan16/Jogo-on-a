@@ -27,7 +27,6 @@ public class ModelMapperConfig {
 
         var modelMapper = new ModelMapper();
 
-
         // Category
         modelMapper.createTypeMap(Category.class, CategoryDTO.class)
             .addMappings(mapper -> {

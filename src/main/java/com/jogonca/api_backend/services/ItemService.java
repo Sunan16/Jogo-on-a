@@ -8,11 +8,15 @@ import org.springframework.stereotype.Service;
 import com.jogonca.api_backend.exceptions.NotFoundException;
 import com.jogonca.api_backend.interfaces.AbstractCrudService;
 import com.jogonca.api_backend.mapper.Mapper;
+import com.jogonca.api_backend.models.Category;
 import com.jogonca.api_backend.models.Item;
+import com.jogonca.api_backend.models.dtos.receiveDTOs.CategoryDTO;
 import com.jogonca.api_backend.models.dtos.receiveDTOs.ItemDTO;
 import com.jogonca.api_backend.models.dtos.sendDTOs.ItemSendDTO;
 import com.jogonca.api_backend.repositories.CategoryRepository;
 import com.jogonca.api_backend.repositories.ItemRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class ItemService extends AbstractCrudService<ItemDTO, Item, ItemSendDTO, String> {
@@ -38,6 +42,20 @@ public class ItemService extends AbstractCrudService<ItemDTO, Item, ItemSendDTO,
             throw new NotFoundException("E-mail não encontrado ou usuario não utilizando e-mail informado!");
         }
         return item.get();
+    }
+
+    @Override
+    @Transactional
+    public ItemDTO insert(ItemSendDTO send){
+        Item entity = Mapper.parseObject(send, Item.class);
+        Category catEntity = dependecy.findById(send.getIdCategoria()).get();
+        entity.setCategory(catEntity);
+        Long id = repository.save(entity).getId();
+        ItemDTO dto = Mapper.parseObject(entity, ItemDTO.class);
+        CategoryDTO catDTO = Mapper.parseObject(catEntity, CategoryDTO.class);
+        dto.setCategory(catDTO);
+        dto.setKey(id);
+        return dto;
     }
 
     protected void updateData(Item entity, ItemDTO i) {

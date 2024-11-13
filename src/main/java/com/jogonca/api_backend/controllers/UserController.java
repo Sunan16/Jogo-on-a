@@ -3,6 +3,8 @@ package com.jogonca.api_backend.controllers;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.http.MediaType;
@@ -60,6 +62,7 @@ public class UserController extends AbstractCrudController<UserDTO, User, UserSe
         // Hashing should be done using a secure algorithm like BCrypt
         String hashedPassword = hashPassword(json.getPasswordHash());
         json.setPasswordHash(hashedPassword);
+        json.setBirthday(LocalDate.parse(json.getBirthday().toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         json.setRecoveryToken(null);
         json.setTokenExpiration(null);
         json.setCoins(null);

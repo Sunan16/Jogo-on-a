@@ -1,7 +1,11 @@
 package com.jogonca.api_backend.models.dtos.sendDTOs;
 
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.jogonca.api_backend.interfaces.IDtoSend;
 
 public class UserSendDTO implements IDtoSend<String> {
@@ -10,6 +14,9 @@ public class UserSendDTO implements IDtoSend<String> {
     private String username;
     private String email;
     private Long coins;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate birthday;
     private String passwordHash;
     private String recoveryToken;
     private ZonedDateTime tokenExpiration;
@@ -87,6 +94,14 @@ public class UserSendDTO implements IDtoSend<String> {
 
     public void setKey(Long key) {
         this.key = key;
+    }
+
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
     }
 
 }

@@ -1,9 +1,12 @@
 package com.jogonca.api_backend.models;
 
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -37,17 +40,21 @@ public class User implements IEntity {
     @Column(unique = true)
     private String email;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate birthday;
+
     private Long coins;
 
     @Column(nullable = false)
     private String passwordHash;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy'T'HH:mm:ss'Z'", timezone = "GMT")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
     private ZonedDateTime creatAt;
 
     private String recoveryToken;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy'T'HH:mm:ss'Z'", timezone = "GMT")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
     private ZonedDateTime tokenExpiration;
 
     // Relações SQL
@@ -147,6 +154,14 @@ public class User implements IEntity {
         this.tokenExpiration = tokenExpiration;
     }
 
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+    }
+
     // Metodos Relações SQL
 
     public Set<Hability> getHabilities() {
@@ -240,6 +255,5 @@ public class User implements IEntity {
     @PrePersist
     protected void onCreate() {
         creatAt = ZonedDateTime.now(ZoneId.of("GMT")); // Define a data/hora atual
-
     }
 }

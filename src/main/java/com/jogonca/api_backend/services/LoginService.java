@@ -5,11 +5,13 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
+import com.jogonca.api_backend.ApiBackendApplication;
 import com.jogonca.api_backend.controllers.LoginController;
 import com.jogonca.api_backend.exceptions.NotFoundException;
 import com.jogonca.api_backend.exceptions.OperationErrorException;
@@ -30,6 +32,9 @@ import jakarta.transaction.Transactional;
 @Service
 public class LoginService {
 
+    @Value("${cors.originPatters}")
+    private String apiURL;
+
     @Autowired
     private UserRepository userRepository;
 
@@ -42,7 +47,7 @@ public class LoginService {
     @Autowired
     private UserService userService;
 
-    private static String phash;
+    
 
     @Transactional
     public List<ItemDTO> addItem(AddItemUser json) {
@@ -94,15 +99,15 @@ public class LoginService {
 
         LoginController.emailRecovery.put(token, user.getEmail());
 
-        phash = String.valueOf(json.getPass());
+        ApiBackendApplication.phash = String.valueOf(json.getPass());
 
-        emailService.sendPasswordRecoveryEmail(user.getEmail(), "http://localhost:8080/user/confirmRecovery/" + token);
+        emailService.sendPasswordRecoveryEmail(user.getEmail(), apiURL + "/login/confirmRecovery/" + token);
 
         return token;
     }
 
     @Transactional
-    public UserDTO confirmRecovery(@PathVariable String token) {
+    public UserDTO confirmRecovery(String token) {
         String email = LoginController.emailRecovery.get(token);
         UserDTO user = userService.findByEmail(email);
 
@@ -116,11 +121,27 @@ public class LoginService {
         }
 
         // Atualizar senha e limpar o token
-        user.setPasswordHash(phash);
-        phash = null;
+        user.setPasswordHash(ApiBackendApplication.phash);
+        ApiBackendApplication.phash = null;
         user.setRecoveryToken(null);
         user.setTokenExpiration(null);
         userService.update(Mapper.parseObject(user, UserSendDTO.class));
+
+        return user;
+    }
+
+    @Transactional
+    public UserDTO login(UserSendDTO userDTO) {
+        String email = userDTO.getEmail();
+        String pass = userDTO.getPasswordHash();
+
+        Optional<User> opUser = userRepository.login(email, pass);
+
+        if (opUser.get() == null) {
+            throw new NotFoundException("Email ou Senha errado, insira os dados corretamente");
+        }
+
+        UserDTO user = Mapper.parseObject(opUser.get(), UserDTO.class);
 
         return user;
     }

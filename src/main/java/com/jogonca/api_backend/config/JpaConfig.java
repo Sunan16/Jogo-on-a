@@ -7,5 +7,4 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @Configuration
 @EnableJpaRepositories(basePackages = "com.jogonca.api_backend.repositories")
 @EntityScan(basePackages = "com.jogonca.api_backend.models")
-public class JpaConfig {
-}
+public class JpaConfig { }

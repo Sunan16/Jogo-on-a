@@ -19,4 +19,11 @@ public interface UserRepository extends IJpaRepositoryIdentifier<User, Long, Str
         )
     Optional<User> findByIdentifier(String send);
 
+    @Transactional
+    @Query(
+        value = "SELECT * FROM users u WHERE LOWER(u.email) = LOWER(:email) AND u.password_hash = :pass",
+        nativeQuery = true
+        )
+    Optional<User> login(String email, String pass);
+
 }
