@@ -6,7 +6,7 @@ FROM maven:3.9.9-eclipse-temurin-17 AS build
 WORKDIR /app
 
 # Copia o arquivo de configuração do Maven e as dependências para cache
-COPY pom.xml ./ 
+COPY pom.xml ./
 COPY src ./src
 
 # Executa o comando de construção, baixando as dependências e criando o JAR
@@ -18,4 +18,8 @@ FROM eclipse-temurin:17-jdk
 # Define o diretório de trabalho
 WORKDIR /app
 
-# Copia o JAR da etapa de build para a
+# Copia o JAR gerado na etapa de build
+COPY --from=build /app/target/my-app.jar ./my-app.jar
+
+# Define o comando para rodar a aplicação Java
+CMD ["java", "-jar", "my-app.jar"]
