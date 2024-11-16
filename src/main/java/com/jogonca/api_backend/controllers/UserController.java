@@ -65,7 +65,7 @@ public class UserController extends AbstractCrudController<UserDTO, User, UserSe
         json.setBirthday(LocalDate.parse(json.getBirthday().toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         json.setRecoveryToken(null);
         json.setTokenExpiration(null);
-        json.setCoins(null);
+        json.setCoins(0L);
 
         UserDTO user = service.insert(json);
         user.add(linkTo(methodOn(this.getClass()).findById(String.valueOf(user.getKey()))).withSelfRel());
@@ -74,7 +74,6 @@ public class UserController extends AbstractCrudController<UserDTO, User, UserSe
     }
 
     private String hashPassword(String password) {
-        // Implement a proper password hashing mechanism, e.g., using BCrypt
-        return password; // Placeholder for actual hashing
+        return password;
     }
 }
